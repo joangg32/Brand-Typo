@@ -1,0 +1,10 @@
+# Archivos grandes de diseño (superan el límite de 100 MB de GitHub)
+*.psd
+*.psb
+*.ai
+*.tif
+*.tiff
+
+# Sistema
+Thumbs.db
+.DS_Store

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LogoName — Generador de nombres con letras de logos</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎰</text></svg>" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="css/styles.css?v=5" />
+</head>
+<body>
+  <!-- Capa de pegatinas generadas por el ratón -->
+  <div class="sticker-layer" id="sticker-layer" aria-hidden="true"></div>
+
+  <!-- Cabecera con los pasos -->
+  <header class="topbar">
+    <div class="brand">Logo<span>name</span></div>
+    <nav class="steps" id="steps">
+      <span class="step is-active" data-step="1">01 Nombre</span>
+      <span class="step" data-step="2">02 Ruleta</span>
+      <span class="step" data-step="3">03 Editar</span>
+    </nav>
+  </header>
+
+  <main id="app">
+
+    <!-- ============ PASO 1: NOMBRE ============ -->
+    <section class="screen is-active" id="screen-1">
+      <div class="hero">
+        <h1 class="poster">
+          <span class="p-line p-strong">Tu nombre</span>
+          <span class="p-line p-soft">en letras <span class="q">&lsquo;reales&rsquo;</span></span>
+          <span class="p-line p-soft">de logos <span class="p-strong">famosos</span></span>
+        </h1>
+
+        <form id="name-form" class="name-form" autocomplete="off">
+          <input id="name-input" type="text" maxlength="14" placeholder="Tu nombre" aria-label="Tu nombre" />
+          <button type="submit" class="btn btn-primary">Empezar</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============ PASO 2: RULETA ============ -->
+    <section class="screen" id="screen-2">
+      <div class="screen-head">
+        <h2>Gira y elige cada letra</h2>
+        <p>Cada columna es una letra de tu nombre. Desliza, sube, baja o pulsa <strong>SPIN</strong>.</p>
+      </div>
+      <div class="reels-wrap">
+        <div class="reels" id="reels"></div>
+      </div>
+      <div class="screen-actions">
+        <button class="btn btn-ghost" data-goto="1">Atrás</button>
+        <button class="btn btn-gold" id="spin-all">Girar todas</button>
+        <button class="btn btn-primary" data-goto="3">Editar letras</button>
+      </div>
+    </section>
+
+    <!-- ============ PASO 3: EDITOR ============ -->
+    <section class="screen" id="screen-3">
+      <div class="editor">
+        <div class="editor-canvas-wrap">
+          <div class="editor-toolbar">
+            <label class="mini">Fondo
+              <input type="color" id="bg-color" value="#ffffff" />
+            </label>
+            <label class="mini chk"><input type="checkbox" id="show-bg" /> Ver fondo</label>
+          </div>
+          <div class="editor-canvas" id="editor-canvas"></div>
+          <div class="letter-gallery" id="letter-gallery" aria-label="Modelos disponibles para la letra"></div>
+        </div>
+
+        <aside class="editor-panel" id="editor-panel">
+          <div class="panel-empty" id="panel-empty">Selecciona una letra para editarla.</div>
+          <div class="panel-controls" id="panel-controls" hidden>
+            <div class="ctrl"><div class="ctrl-row"><span>Tamaño</span><b id="v-scale">100%</b></div>
+              <input type="range" id="c-scale" min="20" max="260" value="100" />
+            </div>
+            <div class="ctrl"><div class="ctrl-row"><span>Posición X</span><b id="v-offx">0</b></div>
+              <input type="range" id="c-offx" min="-300" max="300" value="0" />
+            </div>
+            <div class="ctrl"><div class="ctrl-row"><span>Posición Y</span><b id="v-offy">0</b></div>
+              <input type="range" id="c-offy" min="-300" max="300" value="0" />
+            </div>
+            <div class="ctrl"><div class="ctrl-row"><span>Rotación</span><b id="v-rot">0°</b></div>
+              <input type="range" id="c-rot" min="-180" max="180" value="0" />
+            </div>
+            <div class="ctrl"><div class="ctrl-row"><span>Espejo</span></div>
+              <label class="mini chk"><input type="checkbox" id="c-mirror" /> Horizontal</label>
+              <label class="mini chk"><input type="checkbox" id="c-mirror-v" /> Vertical</label>
+            </div>
+            <div class="ctrl"><div class="ctrl-row"><span>Orden</span></div>
+              <div class="order-row">
+                <button class="btn btn-tiny" id="z-back" type="button">Atrás</button>
+                <button class="btn btn-tiny" id="z-front" type="button">Adelante</button>
+              </div>
+            </div>
+            <button class="btn btn-ghost full" id="reset-letter">Restablecer letra</button>
+          </div>
+          <div class="screen-actions editor-actions">
+            <button class="btn btn-ghost" data-goto="2">Atrás</button>
+            <div class="dl-menu" id="dl-menu">
+              <button class="btn btn-primary" id="dl-toggle" type="button" aria-haspopup="true" aria-expanded="false">Descargar</button>
+              <div class="dl-list" id="dl-list" role="menu" hidden>
+                <button class="dl-opt" type="button" role="menuitem" data-dl="png">PNG &middot; transparente</button>
+                <button class="dl-opt" type="button" role="menuitem" data-dl="svg">SVG &middot; vectorial</button>
+                <button class="dl-opt" type="button" role="menuitem" data-dl="jpg">JPG</button>
+              </div>
+            </div>
+            <button class="btn btn-ghost" id="restart" type="button">Volver al inicio</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Overlay de carga -->
+  <div class="loader" id="loader" hidden>
+    <div class="loader-card">
+      <div class="spinner"></div>
+      <p id="loader-text">Cargando estilos de letras…</p>
+    </div>
+  </div>
+
+  <!-- opentype.js: convierte glifos de fuente en paths SVG vectoriales -->
+  <script src="https://cdn.jsdelivr.net/npm/opentype.js@1.3.4/dist/opentype.min.js"></script>
+  <script src="js/styles.js?v=5"></script>
+  <script src="js/custom-letters.js?v=5"></script>
+  <script src="js/db.js?v=5"></script>
+  <script src="js/app.js?v=5"></script>
+  <script src="js/stickers.js?v=5"></script>
+</body>
+</html>
