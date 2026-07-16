@@ -660,10 +660,41 @@
     });
   });
 
-  function download(fmtType) {
+  /* Sustituye las referencias externas <image href="letters/x.png"> por
+     data URIs base64. Sin esto, el SVG descargado apunta a rutas que no
+     existen fuera del servidor, y al rasterizar a PNG/JPG el navegador
+     bloquea los recursos externos y el lienzo sale vacío. */
+  async function inlineImages(svg) {
+    const srcs = [...new Set(
+      [...svg.matchAll(/<image href="([^"]+)"/g)].map((m) => m[1])
+    )].filter((s) => !s.startsWith("data:"));
+
+    for (const src of srcs) {
+      const res = await fetch(src);
+      if (!res.ok) throw new Error("No se pudo cargar " + src);
+      const blob = await res.blob();
+      const dataUri = await new Promise((ok, ko) => {
+        const r = new FileReader();
+        r.onload = () => ok(r.result);
+        r.onerror = ko;
+        r.readAsDataURL(blob);
+      });
+      svg = svg.split(`href="${src}"`).join(`href="${dataUri}"`);
+    }
+    return svg;
+  }
+
+  async function download(fmtType) {
     const fileBase = (state.name || "nombre").replace(/\s+/g, "_").toLowerCase();
     const withBg = fmtType === "jpg";
-    const { svg, vbW, vbH } = buildNameSVG({ withBg });
+    let { svg, vbW, vbH } = buildNameSVG({ withBg });
+
+    try {
+      svg = await inlineImages(svg);
+    } catch (err) {
+      alert("No se pudieron incrustar las imágenes de las letras. Comprueba que la página se sirve desde el servidor (serve.js), no abierta como archivo local.");
+      return;
+    }
 
     if (fmtType === "svg") {
       const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
@@ -676,6 +707,8 @@
     const scale = outH / vbH;
     const W = Math.round(vbW * scale);
     const H = Math.round(vbH * scale);
+    // Firefox no rasteriza SVG sin width/height explícitos
+    svg = svg.replace("<svg ", `<svg width="${W}" height="${H}" `);
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement("canvas");
