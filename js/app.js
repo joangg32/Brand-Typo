@@ -112,9 +112,9 @@
   }
 
   /* ============================================================
-     PASO 2 — RULETAS (carruseles verticales tipo casino)
+     PASO 2 — RULETAS (carruseles horizontales tipo casino)
      ============================================================ */
-  const ITEM_H = 130; // alto de cada celda de la ruleta (px)
+  const ITEM_W = 140; // ancho de cada celda de la ruleta (px)
 
   function buildReels() {
     const wrap = $("#reels");
@@ -164,20 +164,26 @@
       machine.appendChild(win);
       machine.appendChild(scroll);
 
-      // controles apilados: ▲ / imagen / ▼ / SPIN
-      const up = document.createElement("button");
-      up.type = "button";
-      up.className = "reel-btn up";
-      up.textContent = "▲";
-      up.setAttribute("aria-label", "Letra anterior");
-      up.addEventListener("click", () => step(track, -1));
+      // controles en fila: ◀ / imagen / ▶, y SPIN debajo
+      const left = document.createElement("button");
+      left.type = "button";
+      left.className = "reel-btn left";
+      left.textContent = "◀";
+      left.setAttribute("aria-label", "Letra anterior");
+      left.addEventListener("click", () => step(track, -1));
 
-      const down = document.createElement("button");
-      down.type = "button";
-      down.className = "reel-btn down";
-      down.textContent = "▼";
-      down.setAttribute("aria-label", "Letra siguiente");
-      down.addEventListener("click", () => step(track, 1));
+      const right = document.createElement("button");
+      right.type = "button";
+      right.className = "reel-btn right";
+      right.textContent = "▶";
+      right.setAttribute("aria-label", "Letra siguiente");
+      right.addEventListener("click", () => step(track, 1));
+
+      const hcontrols = document.createElement("div");
+      hcontrols.className = "reel-hcontrols";
+      hcontrols.appendChild(left);     // flecha izquierda
+      hcontrols.appendChild(machine);  // imagen actual de la letra
+      hcontrols.appendChild(right);    // flecha derecha
 
       const spin = document.createElement("button");
       spin.type = "button";
@@ -185,9 +191,7 @@
       spin.textContent = "SPIN";
       spin.addEventListener("click", () => spinRandom(track));
 
-      col.appendChild(up);       // flecha para subir
-      col.appendChild(machine);  // imagen actual de la letra
-      col.appendChild(down);     // flecha para bajar
+      col.appendChild(hcontrols);
       col.appendChild(spin);     // opción SPIN
       wrap.appendChild(col);
 
@@ -209,13 +213,13 @@
   }
 
   function currentIndex(scroll) {
-    return Math.round(scroll.scrollTop / ITEM_H);
+    return Math.round(scroll.scrollLeft / ITEM_W);
   }
 
   function setReel(scroll, track, mi, smooth) {
     const max = track.children.length - 1;
     mi = Math.max(0, Math.min(max, mi));
-    scroll.scrollTo({ top: mi * ITEM_H, behavior: smooth ? "smooth" : "auto" });
+    scroll.scrollTo({ left: mi * ITEM_W, behavior: smooth ? "smooth" : "auto" });
     markSelected(track, mi);
   }
 
@@ -239,8 +243,8 @@
     const n = track.children.length;
     if (n <= 1) return setReel(scroll, track, 0, false);
     const extraLoops = 1 + Math.floor(Math.random() * 2);
-    const startTop = scroll.scrollTop;
-    const endTop = target * ITEM_H + extraLoops * n * ITEM_H;
+    const startLeft = scroll.scrollLeft;
+    const endLeft = target * ITEM_W + extraLoops * n * ITEM_W;
     const dur = 750 + Math.random() * 450;
     const t0 = performance.now();
     scroll.classList.add("spinning");
@@ -248,9 +252,9 @@
     function frame(now) {
       const p = Math.min(1, (now - t0) / dur);
       const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
-      let top = startTop + (endTop - startTop) * eased;
-      top = ((top % (n * ITEM_H)) + n * ITEM_H) % (n * ITEM_H); // envolver
-      scroll.scrollTop = top;
+      let left = startLeft + (endLeft - startLeft) * eased;
+      left = ((left % (n * ITEM_W)) + n * ITEM_W) % (n * ITEM_W); // envolver
+      scroll.scrollLeft = left;
       if (p < 1) {
         requestAnimationFrame(frame);
       } else {
