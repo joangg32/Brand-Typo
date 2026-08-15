@@ -1,132 +1,132 @@
 /* ============================================================
-   styles.js — BASE DE DATOS DE ESTILOS DE LETRA
+   styles.js — LETTER STYLE DATABASE
    ------------------------------------------------------------
-   Cada "estilo" es un modelo de letra que aparecerá en la ruleta.
-   Se generan como VECTORES REALES (paths SVG) a partir de fuentes
-   libres (licencia OFL) elegidas porque EVOCAN logos famosos.
+   Each "style" is a letter model that will appear in the reel.
+   They are generated as REAL VECTORS (SVG paths) from free
+   fonts (OFL license) chosen because they EVOKE famous logos.
 
-   Las fuentes se cargan desde el repo google/fonts vía jsDelivr
-   (necesita conexión a internet la primera vez).
+   Fonts are loaded from the google/fonts repo via jsDelivr
+   (needs an internet connection the first time).
 
-   ¿Quieres letras de logos REALES exactas? No toques esto:
-   añádelas en js/custom-letters.js (ahí lo explico).
+   Want EXACT real logo letters? Don't touch this:
+   add them in js/custom-letters.js (explained there).
    ============================================================ */
 
 const FONT_BASE = "https://cdn.jsdelivr.net/gh/google/fonts@main/";
 
-/* fill puede ser:
-   - un color:  "#E61A27"
-   - un degradado: { stops: ["#a", "#b", ...], angle: 45 }   */
+/* fill can be:
+   - a color: "#E61A27"
+   - a gradient: { stops: ["#a", "#b", ...], angle: 45 }   */
 const STYLES = [
   {
     id: "coca",
-    label: "Rojo Cursiva",
-    vibe: "estilo Coca-Cola",
+    label: "Red Cursive",
+    vibe: "Coca-Cola style",
     url: FONT_BASE + "ofl/lobster/Lobster-Regular.ttf",
     fill: "#E61A27",
   },
   {
     id: "insta",
-    label: "Script Degradado",
-    vibe: "estilo Instagram",
+    label: "Gradient Script",
+    vibe: "Instagram style",
     url: FONT_BASE + "ofl/pacifico/Pacifico-Regular.ttf",
     fill: { stops: ["#F58529", "#DD2A7B", "#8134AF"], angle: 45 },
   },
   {
     id: "netflix",
-    label: "Rojo Condensado",
-    vibe: "estilo Netflix",
+    label: "Red Condensed",
+    vibe: "Netflix style",
     url: FONT_BASE + "ofl/anton/Anton-Regular.ttf",
     fill: "#E50914",
   },
   {
     id: "spotify",
-    label: "Verde Geométrico",
-    vibe: "estilo Spotify",
+    label: "Geometric Green",
+    vibe: "Spotify style",
     url: FONT_BASE + "ofl/righteous/Righteous-Regular.ttf",
     fill: "#1DB954",
   },
   {
     id: "disney",
-    label: "Azul Redondeado",
-    vibe: "estilo Disney",
+    label: "Rounded Blue",
+    vibe: "Disney style",
     url: FONT_BASE + "ofl/titanone/TitanOne-Regular.ttf",
     fill: "#2A6FD6",
   },
   {
     id: "comic",
-    label: "Cómic Pop",
-    vibe: "estilo cómic",
+    label: "Pop Comic",
+    vibe: "comic style",
     url: FONT_BASE + "ofl/bangers/Bangers-Regular.ttf",
     fill: { stops: ["#FFD200", "#FF7A00"], angle: 90 },
   },
   {
     id: "urban",
-    label: "Bloque Urbano",
-    vibe: "estilo callejero",
+    label: "Urban Block",
+    vibe: "street style",
     url: FONT_BASE + "ofl/bungee/Bungee-Regular.ttf",
     fill: "#00B4D8",
   },
   {
     id: "neon",
-    label: "Neón Línea",
-    vibe: "estilo neón",
+    label: "Neon Line",
+    vibe: "neon style",
     url: FONT_BASE + "ofl/monoton/Monoton-Regular.ttf",
     fill: { stops: ["#FF00CC", "#3333FF"], angle: 60 },
   },
   {
     id: "marker",
-    label: "Rotulador",
-    vibe: "manuscrito",
+    label: "Marker",
+    vibe: "handwritten",
     url: FONT_BASE + "apache/permanentmarker/PermanentMarker-Regular.ttf",
     fill: "#111418",
   },
   {
     id: "retro8",
-    label: "Pixel Retro",
-    vibe: "estilo videojuego",
+    label: "Retro Pixel",
+    vibe: "video game style",
     url: FONT_BASE + "ofl/pressstart2p/PressStart2P-Regular.ttf",
     fill: "#39FF14",
   },
   {
     id: "slab",
-    label: "Slab Macizo",
-    vibe: "estilo robusto",
+    label: "Solid Slab",
+    vibe: "bold style",
     url: FONT_BASE + "ofl/alfaslabone/AlfaSlabOne-Regular.ttf",
     fill: "#D62828",
   },
   {
     id: "tech",
-    label: "Tecno Futurista",
-    vibe: "estilo tech",
+    label: "Futuristic Tech",
+    vibe: "tech style",
     url: FONT_BASE + "ofl/audiowide/Audiowide-Regular.ttf",
     fill: { stops: ["#00F5D4", "#0077B6"], angle: 45 },
   },
   {
     id: "army",
-    label: "Estarcido Militar",
-    vibe: "estilo militar",
+    label: "Military Stencil",
+    vibe: "military style",
     url: FONT_BASE + "ofl/blackopsone/BlackOpsOne-Regular.ttf",
     fill: "#5A6B2F",
   },
   {
     id: "horror",
-    label: "Terror Goteo",
-    vibe: "estilo terror",
+    label: "Horror Drip",
+    vibe: "horror style",
     url: FONT_BASE + "ofl/creepster/Creepster-Regular.ttf",
     fill: "#7B2CBF",
   },
   {
     id: "bubble",
-    label: "Burbuja",
-    vibe: "estilo pop",
+    label: "Bubble",
+    vibe: "pop style",
     url: FONT_BASE + "ofl/bowlbyonesc/BowlbyOneSC-Regular.ttf",
     fill: "#FF4D8D",
   },
   {
     id: "mono",
-    label: "Mono Grueso",
-    vibe: "estilo industrial",
+    label: "Thick Mono",
+    vibe: "industrial style",
     url: FONT_BASE + "ofl/rubikmonoone/RubikMonoOne-Regular.ttf",
     fill: "#222831",
   },

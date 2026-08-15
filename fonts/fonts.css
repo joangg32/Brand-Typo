@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'TS Block';
+    src: url('TSBlock-Bold.woff2') format('woff2'),
+        url('TSBlock-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+    /* La fuente no incluye vocales acentuadas (á, é, í, ó, ú, ñ...);
+       se restringe a Basic Latin para que esos caracteres caigan en
+       la fuente de respaldo (Archivo Black) en vez de desaparecer. */
+    unicode-range: U+0020-007E;
+}
+

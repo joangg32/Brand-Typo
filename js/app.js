@@ -29,6 +29,7 @@
     $$("#steps .step").forEach((el) =>
       el.classList.toggle("is-active", Number(el.dataset.step) === step)
     );
+    document.body.dataset.step = String(step);
     if (step === 2) buildReels();
     if (step === 3) {
       // al entrar al editor, seleccionar la primera letra por defecto
@@ -47,7 +48,7 @@
      OVERLAY DE CARGA
      ============================================================ */
   function showLoader(text) {
-    $("#loader-text").textContent = text || "Cargando…";
+    $("#loader-text").textContent = text || "Loading…";
     $("#loader").hidden = false;
   }
   function hideLoader() {
@@ -64,7 +65,7 @@
     const raw = $("#name-input").value;
     const clean = Array.from(raw).filter((c) => ALLOWED.test(c)).join("").replace(/\s+/g, " ").trim();
     if (!clean) {
-      flashHint("Escribe al menos una letra.");
+      flashHint("Type at least one letter.");
       return;
     }
     state.name = clean.slice(0, 14);
@@ -75,7 +76,7 @@
 
     buildLetters();
     if (!state.letters.some((l) => !l.isSpace && l.models.length)) {
-      flashHint("No se encontraron logos para esas letras. Prueba con letras A–Z.");
+      flashHint("No logos found for those letters. Try letters A–Z.");
       return;
     }
     goto(2);
@@ -123,7 +124,7 @@
       if (letter.isSpace) {
         const gap = document.createElement("div");
         gap.className = "reel-gap";
-        gap.innerHTML = '<span>espacio</span>';
+        gap.innerHTML = '<span>space</span>';
         wrap.appendChild(gap);
         return;
       }
@@ -163,10 +164,6 @@
       machine.appendChild(win);
       machine.appendChild(scroll);
 
-      // pie de foto editorial con el nombre del estilo elegido
-      const caption = document.createElement("div");
-      caption.className = "reel-caption";
-
       // controles apilados: ▲ / imagen / ▼ / SPIN
       const up = document.createElement("button");
       up.type = "button";
@@ -192,7 +189,6 @@
       col.appendChild(machine);  // imagen actual de la letra
       col.appendChild(down);     // flecha para bajar
       col.appendChild(spin);     // opción SPIN
-      col.appendChild(caption);  // nombre del estilo
       wrap.appendChild(col);
 
       // selección inicial = modelo guardado
@@ -289,9 +285,6 @@
     const model = state.letters[i].models[mi];
     if (model) {
       state.letters[i].modelId = model.id;
-      const col = track.closest(".reel-col");
-      const cap = col && col.querySelector(".reel-caption");
-      if (cap) cap.textContent = modelLabel(model, state.letters[i].char);
     }
   }
 
@@ -671,7 +664,7 @@
 
     for (const src of srcs) {
       const res = await fetch(src);
-      if (!res.ok) throw new Error("No se pudo cargar " + src);
+      if (!res.ok) throw new Error("Could not load " + src);
       const blob = await res.blob();
       const dataUri = await new Promise((ok, ko) => {
         const r = new FileReader();
@@ -685,14 +678,14 @@
   }
 
   async function download(fmtType) {
-    const fileBase = (state.name || "nombre").replace(/\s+/g, "_").toLowerCase();
+    const fileBase = (state.name || "name").replace(/\s+/g, "_").toLowerCase();
     const withBg = fmtType === "jpg";
     let { svg, vbW, vbH } = buildNameSVG({ withBg });
 
     try {
       svg = await inlineImages(svg);
     } catch (err) {
-      alert("No se pudieron incrustar las imágenes de las letras. Comprueba que la página se sirve desde el servidor (serve.js), no abierta como archivo local.");
+      alert("Could not embed the letter images. Make sure the page is served from the server (serve.js), not opened as a local file.");
       return;
     }
 
@@ -727,7 +720,7 @@
         0.95
       );
     };
-    img.onerror = () => alert("No se pudo generar la imagen. Prueba a descargar el SVG.");
+    img.onerror = () => alert("Could not generate the image. Try downloading the SVG instead.");
     img.src = "data:image/svg+xml;base64," + b64(svg);
   }
 
@@ -745,12 +738,24 @@
     if (revoke) setTimeout(() => URL.revokeObjectURL(href), 4000);
   }
 
-  /* ---------- Reiniciar ---------- */
-  $("#restart").addEventListener("click", () => {
-    state.name = "";
-    state.letters = [];
-    state.selected = -1;
-    $("#name-input").value = "";
-    goto(1);
+  /* ============================================================
+     PANEL ABOUT
+     ============================================================ */
+  const aboutLayer = $("#about-layer");
+  const aboutToggle = $("#about-toggle");
+
+  function openAbout() {
+    aboutLayer.hidden = false;
+    aboutToggle.setAttribute("aria-expanded", "true");
+  }
+  function closeAbout() {
+    aboutLayer.hidden = true;
+    aboutToggle.setAttribute("aria-expanded", "false");
+  }
+  aboutToggle.addEventListener("click", openAbout);
+  $("#about-close").addEventListener("click", closeAbout);
+  $("#about-backdrop").addEventListener("click", closeAbout);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !aboutLayer.hidden) closeAbout();
   });
 })();
